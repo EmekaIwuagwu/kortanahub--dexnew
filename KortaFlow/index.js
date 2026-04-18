@@ -17,6 +17,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 app.get('/', (req, res) => res.send('KortaFlow Bot: ACTIVE 🚀'));
 app.get('/health', (req, res) => res.json({ status: 'OK', uptime: process.uptime() }));
+app.get('/stats', (req, res) => res.json({
+    trade_count: tradeCount,
+    dnr_volume: totalDnrVolume,
+    usd_volume: totalUsdckVolume,
+    success_rate: tradeCount > 0 ? (successCount / tradeCount) * 100 : 0
+}));
 app.listen(PORT, () => console.log(chalk.blue(`[Sentinel] Heartbeat server active on port ${PORT}`)));
 
 let tradeCount = 0;
