@@ -1,0 +1,53 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: KortanaFactory
+    network: kortanaTestnet
+    source:
+      address: "0x0000000000000000000000000000000000000000" # Update after deployment
+      abi: KortanaFactory
+      startBlock: 1
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Pair
+        - Token
+      abis:
+        - name: KortanaFactory
+          file: ../artifacts/contracts/amm/KortanaFactory.sol/KortanaFactory.json
+      eventHandlers:
+        - event: PairCreated(indexed address,indexed address,address,uint256)
+          handler: handlePairCreated
+      file: ./src/mappings/factory.ts
+templates:
+  - kind: ethereum/contract
+    name: KortanaPair
+    network: kortanaTestnet
+    source:
+      abi: KortanaPair
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Pair
+        - Swap
+        - Mint
+        - Burn
+      abis:
+        - name: KortanaPair
+          file: ../artifacts/contracts/amm/KortanaPair.sol/KortanaPair.json
+      eventHandlers:
+        - event: Mint(indexed address,uint256,uint256)
+          handler: handleMint
+        - event: Burn(indexed address,uint256,uint256,indexed address)
+          handler: handleBurn
+        - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
+          handler: handleSwap
+        - event: Sync(uint112,uint112)
+          handler: handleSync
+      file: ./src/mappings/pair.ts

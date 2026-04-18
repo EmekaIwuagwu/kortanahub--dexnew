@@ -1,0 +1,16 @@
+{
+  "name": "@kortana/sdk",
+  "version": "1.0.0",
+  "description": "SDK for connecting to Kortana DEX",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "ethers": "^6.11.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

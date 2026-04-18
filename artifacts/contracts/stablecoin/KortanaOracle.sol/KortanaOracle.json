@@ -1,0 +1,131 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "KortanaOracle",
+  "sourceName": "contracts/stablecoin/KortanaOracle.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_pair",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "getCollateralPrice",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getKORTUSDPrice",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "manualCollateralPrice",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "manualKORTUSDPrice",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "pair",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "collateralPrice",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "kortusdPrice",
+          "type": "uint256"
+        }
+      ],
+      "name": "setManualPrices",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x60a03461007c57601f6102c638819003918201601f19168301916001600160401b038311848410176100815780849260209460405283398101031261007c57516001600160a01b038116810361007c57600080546001600160a01b0319163317905560805260405161022e908161009882396080518161014e0152f35b600080fd5b634e487b7160e01b600052604160045260246000fdfe60806040818152600436101561001457600080fd5b600091823560e01c908163612997c7146101a4575080638da5cb5b1461017d578063a8aa1b311461013a578063b0a9a88f1461011c578063f02e18251461011c578063f2fde38b146100d1578063f7683bbc146100b35763fd9384e21461007a57600080fd5b346100af573660031901126100ac5761009d60018060a01b0382541633146101c0565b60043560015560243560025580f35b80fd5b5080fd5b50346100af57816003193601126100af576020906001549051908152f35b82346100ac5760203660031901126100ac576004356001600160a01b038181169182900361011857610108835491821633146101c0565b6001600160a01b03191617815580f35b8280fd5b50346100af57816003193601126100af576020906002549051908152f35b50346100af57816003193601126100af57517f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03168152602090f35b50346100af57816003193601126100af57905490516001600160a01b039091168152602090f35b8390346100af57816003193601126100af576020906001548152f35b156101c757565b60405162461bcd60e51b81526020600482015260096024820152682727aa2fa7aba722a960b91b6044820152606490fdfea26469706673582212208033347c575fd29e164a9053d403bfd1376cadae6fbec6d84f330004fee5b03f64736f6c63430008140033",
+  "deployedBytecode": "0x60806040818152600436101561001457600080fd5b600091823560e01c908163612997c7146101a4575080638da5cb5b1461017d578063a8aa1b311461013a578063b0a9a88f1461011c578063f02e18251461011c578063f2fde38b146100d1578063f7683bbc146100b35763fd9384e21461007a57600080fd5b346100af573660031901126100ac5761009d60018060a01b0382541633146101c0565b60043560015560243560025580f35b80fd5b5080fd5b50346100af57816003193601126100af576020906001549051908152f35b82346100ac5760203660031901126100ac576004356001600160a01b038181169182900361011857610108835491821633146101c0565b6001600160a01b03191617815580f35b8280fd5b50346100af57816003193601126100af576020906002549051908152f35b50346100af57816003193601126100af57517f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03168152602090f35b50346100af57816003193601126100af57905490516001600160a01b039091168152602090f35b8390346100af57816003193601126100af576020906001548152f35b156101c757565b60405162461bcd60e51b81526020600482015260096024820152682727aa2fa7aba722a960b91b6044820152606490fdfea26469706673582212208033347c575fd29e164a9053d403bfd1376cadae6fbec6d84f330004fee5b03f64736f6c63430008140033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

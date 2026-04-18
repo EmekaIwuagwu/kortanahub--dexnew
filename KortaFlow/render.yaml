@@ -1,0 +1,41 @@
+services:
+  - type: worker
+    name: kortaflow-bot
+    env: docker
+    dockerContext: .
+    dockerfilePath: Dockerfile
+    plan: starter
+    autoDeploy: true
+    envVars:
+      - key: KORTANA_RPC_URL
+        sync: false
+      - key: CHAIN_ID
+        value: 9002
+      - key: DEX_ROUTER_ADDRESS
+        sync: false
+      - key: DNR_TOKEN_ADDRESS
+        sync: false
+      - key: USDCK_TOKEN_ADDRESS
+        sync: false
+      - key: WALLET_1
+        sync: false
+      - key: WALLET_2
+        sync: false
+      - key: WALLET_3
+        sync: false
+      - key: WALLET_4
+        sync: false
+      - key: WALLET_5
+        sync: false
+      - key: WALLET_6
+        sync: false
+      - key: WALLET_7
+        sync: false
+      - key: WALLET_8
+        sync: false
+      - key: WALLET_9
+        sync: false
+      - key: WALLET_10
+        sync: false
+      - key: WALLET_11
+        sync: false

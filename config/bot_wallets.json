@@ -1,0 +1,59 @@
+{
+  "master": {
+    "address": "0xC70292a9DC97cF548Fee9839D7696CBAFc951B20",
+    "privateKey": "0xe5aab94508f057a4608f971c8ad37d01e5888c66acc941cef70479ad08b8ec70"
+  },
+  "fleet": [
+    {
+      "id": 0,
+      "address": "0xE1Bf668b9b0FB4FaB513335661fb0D1b63012ebe",
+      "privateKey": "0xe5919109d998b9684546de43902b98ef355e8bbfff30eca15789cff053ac9185"
+    },
+    {
+      "id": 1,
+      "address": "0x43F76f0c5923448D8CfB51D5A0691F9485D74062",
+      "privateKey": "0x676966022a1f1d061672b1083aae9e0b0d918410a5439933ed5876181b443dba"
+    },
+    {
+      "id": 2,
+      "address": "0xc58F9521E7e9aEc5EBcFDBaAa9d4AE695eea19e2",
+      "privateKey": "0x9d40a3cb9126bd8172c92fc71ced0a692085b46eb4df639a2d45226b19fef1e9"
+    },
+    {
+      "id": 3,
+      "address": "0x4C32Bb155b97fb3613eb89126A1772993F15e47e",
+      "privateKey": "0x079b99096edee3843fe28a5a73d52d159e8e055887b16cd2be55fa2f7b21ee78"
+    },
+    {
+      "id": 4,
+      "address": "0x2d895a1d698accA84C5e3c05dc62Fc83FD82fFE9",
+      "privateKey": "0xa4cdda16d7ad43f2f90a0944ace79fb41872de65490326ce1fc8a61b697f9b6e"
+    },
+    {
+      "id": 5,
+      "address": "0x815eFeF3D2e0FF68656F50ce8173Fa238DF508fd",
+      "privateKey": "0x32002e46a0711cb5fe49ba0bc49e740d49f20bc23669b4e2967a3da175e14e1c"
+    },
+    {
+      "id": 6,
+      "address": "0xE3708D2e3b5e7FC3981B4488793932a8126D3235",
+      "privateKey": "0xf4457ece174ab960f9eb7541b6734c653288c322fa5196b5a6c3d1e29bc11c6b"
+    },
+    {
+      "id": 7,
+      "address": "0x16FeA45eFC206571FfE7Ed43c0f1EC5c0d27B4f6",
+      "privateKey": "0x6e1bf1878f10ab328115ac38d2590b82764986d66cf0f1eca30f1ec8bbda0043"
+    },
+    {
+      "id": 8,
+      "address": "0x903725CE86bA92f60C1B609816e5A987156778eC",
+      "privateKey": "0x095ee7bce4deb57b3f1f78653398c5c7298dad324c88d389ee0d537af4cf22c0"
+    },
+    {
+      "id": 9,
+      "address": "0x8E8dA073bF679Ff718f3E8bCfbcB74b0854A5B9A",
+      "privateKey": "0x7cd42adcb7956c1278cc6f976ce54c7749c1c6d37923ae456dc905e490d3effe"
+    }
+  ],
+  "lastUpdate": "2026-04-16T15:57:16.641Z"
+}
