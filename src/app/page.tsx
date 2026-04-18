@@ -196,11 +196,11 @@ export default function Home() {
           <div className="relative animate-in slide-in-from-right-20 duration-1000">
              <div className="aspect-square glass-panel p-2 flex items-center justify-center relative group">
                 <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 via-transparent to-secondary/10 opacity-30 group-hover:opacity-60 transition-opacity" />
-                <div className="relative z-10 text-center scale-110">
+                <div className="relative z-10 text-center">
                    <img 
-                    src="https://dex.kortana.xyz/logo.png" 
+                    src="/logo.png" 
                     alt="DNR Sovereign" 
-                    className="w-[340px] h-[340px] mx-auto mb-10 drop-shadow-[0_0_80px_rgba(251,17,142,0.4)] animate-bounce duration-[8000ms]"
+                    className="w-[280px] h-[280px] mx-auto mb-10 drop-shadow-[0_0_80px_rgba(251,17,142,0.4)] animate-bounce duration-[8000ms] object-contain"
                    />
                    <h3 className="text-6xl font-black text-white tracking-tighter uppercase">Dinar Asset</h3>
                    <p className="text-secondary font-black uppercase text-xs tracking-[1em] mt-4 ml-4">GENESIS ACTIVE</p>

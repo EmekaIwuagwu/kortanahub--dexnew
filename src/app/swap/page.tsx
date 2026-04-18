@@ -218,7 +218,7 @@ export default function SwapPage() {
                   onClick={() => { setSelectingFor("in"); setIsModalOpen(true); }} 
                   className="token-chip shrink-0 group-hover:border-primary/50"
                 >
-                  {tokenIn.logo ? <img src={tokenIn.logo} className="w-6 h-6 rounded-full" alt="" /> : <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-[10px] font-bold">{tokenIn.symbol[0]}</div>}
+                  {tokenIn.logo ? <img src={tokenIn.logo} className="w-6 h-6 rounded-full object-contain" alt="" /> : <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-[10px] font-bold">{tokenIn.symbol[0]}</div>}
                   <span className="font-black text-base">{tokenIn.symbol}</span>
                   <ChevronDown className="w-4 h-4 text-text-muted group-hover:text-primary" />
                 </button>
@@ -255,7 +255,7 @@ export default function SwapPage() {
                   className="bg-primary hover:bg-primary-dark text-white min-w-[140px] h-14 px-6 rounded-full font-black shadow-[0_10px_20px_rgba(251,17,142,0.3)] text-base shrink-0 transition-transform active:scale-95 flex items-center justify-center gap-3 group overflow-hidden relative"
                 >
                   <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12" />
-                  {tokenOut.logo ? <img src={tokenOut.logo} className="w-6 h-6 rounded-full bg-white/20 p-0.5" alt="" /> : <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-bold">{tokenOut.symbol[0]}</div>}
+                  {tokenOut.logo ? <img src={tokenOut.logo} className="w-6 h-6 rounded-full bg-white/20 p-0.5 object-contain" alt="" /> : <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-bold">{tokenOut.symbol[0]}</div>}
                   <span className="whitespace-nowrap">{tokenOut.symbol}</span>
                 </button>
               </div>
