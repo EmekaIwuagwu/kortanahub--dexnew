@@ -14,9 +14,9 @@
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.8.0",
-    "next": "16.2.3",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
     "tailwind-merge": "^3.5.0",
     "viem": "^2.21.0",
     "wagmi": "^2.14.0"
