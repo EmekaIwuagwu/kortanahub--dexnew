@@ -8,6 +8,16 @@ const randomizer = require('./utils/randomizer');
 const logger = require('./utils/logger');
 const fs = require('fs');
 const path = require('path');
+const express = require('express');
+const chalk = require('chalk');
+const dotenv = require('dotenv');
+
+// 1. Keep-Alive Sentinel
+const app = express();
+const PORT = process.env.PORT || 3000;
+app.get('/', (req, res) => res.send('KortaFlow Bot: ACTIVE 🚀'));
+app.get('/health', (req, res) => res.json({ status: 'OK', uptime: process.uptime() }));
+app.listen(PORT, () => console.log(chalk.blue(`[Sentinel] Heartbeat server active on port ${PORT}`)));
 
 let tradeCount = 0;
 let totalDnrVolume = 0;
