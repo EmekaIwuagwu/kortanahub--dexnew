@@ -20,55 +20,60 @@ const ERC20_ABI = [
 const executeSwap = async (wallet, type, amountIn) => {
     const provider = wallet.provider;
     const gasPrice = await gasManager.getGasPrice(provider);
-    
-    // VERIFIED LIQUIDITY PAIR (FOR BOT INJECTION)
-    const PAIR = "0x4251Bfe762EB0535a22C4653b4353f184A13eb4d";
+    const ROUTER_ADDRESS = network.routerAddress;
 
     try {
-        // GAS CHECK
         const balance = await provider.getBalance(wallet.address);
         if (balance < ethers.parseUnits("0.5", 18)) {
             throw new Error(`Insufficient Fuel: ${ethers.formatUnits(balance, 18)} DNR (Need >= 0.5)`);
         }
 
+        const router = new ethers.Contract(ROUTER_ADDRESS, [
+            'function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) external payable returns (uint[] memory amounts)',
+            'function swapExactTokensForETH(uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline) external returns (uint[] memory amounts)'
+        ], wallet);
+
+        const path = [
+            type === 'BUY_USDCK' ? network.dnrAddress : network.usdckAddress,
+            type === 'BUY_USDCK' ? network.usdckAddress : network.dnrAddress
+        ];
+
+        const deadline = Math.floor(Date.now() / 1000) + 600;
+
         if (type === 'BUY_USDCK') {
-            // Sell DNR -> Buy USDC
-            console.log(`[KortaFlow] ℹ️  Executing Native Volume Transfer...`);
-            const tx = await wallet.sendTransaction({
-                to: PAIR,
-                value: ethers.parseUnits(amountIn.toString(), 18),
-                gasPrice,
-                gasLimit: 40000,
-                type: 0
-            });
+            console.log(`[KortaFlow] ℹ️  Executing Router Swap (DNR -> USDC.k)...`);
+            const tx = await router.swapExactETHForTokens(
+                0, // No slippage protection for volume bot
+                path,
+                wallet.address,
+                deadline,
+                { value: ethers.parseUnits(amountIn.toString(), 18), gasPrice, gasLimit: 250000, type: 0 }
+            );
             const receipt = await tx.wait();
-            return {
-                status: 'SUCCESS',
-                txHash: tx.hash,
-                blockNumber: receipt.blockNumber,
-                gasUsed: receipt.gasUsed.toString(),
-                amountOut: (amountIn * 0.4).toFixed(4)
-            };
+            return { status: 'SUCCESS', txHash: tx.hash, blockNumber: receipt.blockNumber, gasUsed: receipt.gasUsed.toString(), amountOut: (amountIn * 0.4).toFixed(4) };
         } else {
-            // Sell USDC -> Buy DNR
-            console.log(`[KortaFlow] ℹ️  Executing Token Growth Transfer...`);
+            console.log(`[KortaFlow] ℹ️  Executing Router Swap (USDC.k -> DNR)...`);
             const token = new ethers.Contract(network.usdckAddress, ERC20_ABI, wallet);
             const amountInWei = ethers.parseUnits(amountIn.toString(), 18);
-            
-            // For USDC -> DNR, we transfer directly to the Pair
-            const tx = await token.transfer(PAIR, amountInWei, {
-                gasPrice,
-                gasLimit: 120000,
-                type: 0
-            });
+
+            // 1. Approve
+            const allowance = await token.allowance(wallet.address, ROUTER_ADDRESS);
+            if (allowance < amountInWei) {
+                const approveTx = await token.approve(ROUTER_ADDRESS, ethers.MaxUint256, { gasPrice, type: 0 });
+                await approveTx.wait();
+            }
+
+            // 2. Swap
+            const tx = await router.swapExactTokensForETH(
+                amountInWei,
+                0,
+                path,
+                wallet.address,
+                deadline,
+                { gasPrice, gasLimit: 250000, type: 0 }
+            );
             const receipt = await tx.wait();
-            return {
-                status: 'SUCCESS',
-                txHash: tx.hash,
-                blockNumber: receipt.blockNumber,
-                gasUsed: receipt.gasUsed.toString(),
-                amountOut: (amountIn * 2.5).toFixed(4)
-            };
+            return { status: 'SUCCESS', txHash: tx.hash, blockNumber: receipt.blockNumber, gasUsed: receipt.gasUsed.toString(), amountOut: (amountIn * 2.5).toFixed(4) };
         }
     } catch (error) {
         return { status: 'FAILED', failReason: error.message };
