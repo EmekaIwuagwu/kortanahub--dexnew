@@ -73,7 +73,7 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {[
                   { label: "Total Liquidity Locked", value: "$2,591,018,193", icon: Droplets, color: "text-primary" },
-                  { label: "24H Trading Volume", value: "$12,840,490", icon: Zap, color: "text-secondary" },
+                  { label: "Active Market Nodes", value: "11 Secured Nodes", icon: Cpu, color: "text-secondary" },
                   { label: "Network Authority", value: "Kortana Mainnet", icon: ShieldCheck, color: "text-white" },
                 ].map((stat, i) => (
                   <div key={i} className="glass-panel p-8 group hover:border-primary/50 transition-all duration-500">
