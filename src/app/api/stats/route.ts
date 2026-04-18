@@ -14,13 +14,11 @@ export async function GET() {
   try {
     const provider = new ethers.JsonRpcProvider(ZEUS_RPC);
     const pair = new ethers.Contract(MAINNET_CONFIG.PAIR, [
-      "function reserve0() view returns (uint256)",
-      "function reserve1() view returns (uint256)",
+      "function getReserves() view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast)",
       "function token0() view returns (address)"
     ], provider);
 
-    const r0 = await pair.reserve0();
-    const r1 = await pair.reserve1();
+    const [r0, r1] = await pair.getReserves();
     const t0 = await pair.token0();
 
     const isT0USDC = t0.toLowerCase() === MAINNET_CONFIG.USDCk.toLowerCase();

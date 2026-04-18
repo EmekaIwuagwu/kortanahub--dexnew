@@ -27,7 +27,7 @@ export const DEFAULT_TOKENS = [
     address: CONTRACTS.WDNR,
     decimals: 18,
     isNative: true,
-    logo: "https://dex.kortana.xyz/logo.png"
+    logo: "/token_dnr.png"
   },
   {
     symbol: "USDC.k",
