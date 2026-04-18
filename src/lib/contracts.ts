@@ -27,7 +27,7 @@ export const DEFAULT_TOKENS = [
     address: CONTRACTS.WDNR,
     decimals: 18,
     isNative: true,
-    logo: "/token_dnr.png"
+    logo: "/logo.png"
   },
   {
     symbol: "USDC.k",
