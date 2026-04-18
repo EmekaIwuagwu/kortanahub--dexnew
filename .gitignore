@@ -1,0 +1,12 @@
+node_modules/
+.env
+logs/
+*.log
+.gemini/
+.next/
+dist/
+build/
+.hardhat/
+artifacts/
+cache/
+.DS_Store
