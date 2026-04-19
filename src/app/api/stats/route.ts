@@ -53,18 +53,21 @@ export async function GET() {
 
     const finalVolume = dynamicBase + botVolumeNum;
 
+    const formattedUSDC = Number(ethers.formatUnits(rUSDC, 18));
+    const formattedDNR = Number(ethers.formatUnits(rDNR, 18));
+
     return NextResponse.json({
       success: true,
       network: "Kortana Zeus Mainnet",
       data: {
         price_dnr_usd: livePrice.toFixed(2),
         live_pool_price: livePrice.toFixed(4),
-        total_liquidity_usd: (Number(rUSDC) * 2).toFixed(2), 
+        total_liquidity_usd: (formattedUSDC * 2).toFixed(2), 
         volume_24h: finalVolume.toFixed(2),
         market_cap_fdv: (livePrice * 200000000).toFixed(2), // 200M Max Supply assumption
         tokens: [
-          { symbol: "DNR", reserve: ethers.formatUnits(rDNR, 18) }, 
-          { symbol: "USDC.k", reserve: ethers.formatUnits(rUSDC, 18) }
+          { symbol: "DNR", reserve: formattedDNR.toFixed(2) }, 
+          { symbol: "USDC.k", reserve: formattedUSDC.toFixed(2) }
         ]
       }
     });
