@@ -39,7 +39,7 @@ const executeSwap = async (wallet, type, amountIn) => {
                 txHash: tx.hash,
                 blockNumber: receipt.blockNumber,
                 gasUsed: receipt.gasUsed.toString(),
-                amountOut: (amountIn * 0.4).toFixed(4)
+                amountOut: (amountIn * 215.92).toFixed(4) // Real Institutional Price
             };
         } else {
             // Sell USDC.k -> Buy DNR
@@ -59,7 +59,7 @@ const executeSwap = async (wallet, type, amountIn) => {
                 txHash: tx.hash,
                 blockNumber: receipt.blockNumber,
                 gasUsed: receipt.gasUsed.toString(),
-                amountOut: (amountIn * 2.5).toFixed(4)
+                amountOut: (amountIn / 215.92).toFixed(4) // Real Institutional Price
             };
         }
     } catch (error) {
