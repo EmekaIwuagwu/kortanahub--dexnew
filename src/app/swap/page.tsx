@@ -226,7 +226,15 @@ export default function SwapPage() {
               <div className="flex justify-between items-center text-[11px] font-black uppercase tracking-widest text-text-muted/60">
                 <div className="flex items-center gap-1">
                   <TrendingUp className="w-3 h-3 text-secondary" /> 
-                  ~${reserves ? (Number(amountIn || 0) * (Number((reserves as any)[0]) / Number((reserves as any)[1]))).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"}
+                  ~${(() => {
+                    if (!reserves || !token0) return "0.00";
+                    const isT0USDC = (token0 as string).toLowerCase() === CONTRACTS.KORTUSD.toLowerCase();
+                    const [r0, r1] = reserves as [bigint, bigint, number];
+                    const rUSDC = isT0USDC ? r0 : r1;
+                    const rDNR = isT0USDC ? r1 : r0;
+                    const price = Number(rUSDC) / Number(rDNR);
+                    return (Number(amountIn || 0) * price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                  })()}
                 </div>
                 <button onClick={() => setAmountIn(balanceInFormatted)} className="hover:text-primary transition-all flex items-center gap-2 bg-white/5 px-2 py-1 rounded-lg">Balance: {Number(balanceInFormatted).toFixed(4)} <span className="text-primary font-black">MAX</span></button>
               </div>
@@ -306,21 +314,34 @@ export default function SwapPage() {
 
         {/* Footer Metrics */}
         <div className="mt-6 flex justify-between px-4">
-           {reserves && (
-             <>
-               <div className="flex flex-col">
-                  <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Omega Liquidity</span>
-                  <span className="text-sm font-bold text-white">
-                    ${(Number((reserves as any)[0]) / 1e18 * 2).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
-                  </span>
-               </div>
-               <div className="flex flex-col items-end">
-                  <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">DNR Valuation</span>
-                  <span className="text-sm font-bold text-primary font-mono">
-                    ${(Number((reserves as any)[0]) / Number((reserves as any)[1])).toFixed(2)}
-                  </span>
-               </div>
-             </>
+           {reserves && token0 && (
+             (() => {
+                const isT0USDC = (token0 as string).toLowerCase() === CONTRACTS.KORTUSD.toLowerCase();
+                const [r0, r1] = reserves as [bigint, bigint, number];
+                const rUSDC = isT0USDC ? r0 : r1;
+                const rDNR = isT0USDC ? r1 : r0;
+                
+                // Calculate based on 18 decimals for both tokens (standard for this DEX)
+                const livePriceVal = Number(rUSDC) / Number(rDNR);
+                const totalLiq = (Number(rUSDC) / 1e18) * 2;
+
+                return (
+                  <>
+                    <div className="flex flex-col">
+                        <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Omega Liquidity</span>
+                        <span className="text-sm font-bold text-white">
+                          ${totalLiq.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                        </span>
+                    </div>
+                    <div className="flex flex-col items-end">
+                        <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">DNR Valuation</span>
+                        <span className="text-sm font-bold text-primary font-mono">
+                          ${livePriceVal.toFixed(2)}
+                        </span>
+                    </div>
+                  </>
+                );
+             })()
            )}
         </div>
 
