@@ -72,15 +72,15 @@ async function runBot() {
 
             const { wallet } = walletData;
 
-            // 3. Determine Trade
-            const isBuyDNR = randomizer.getWeightedChance(50);
-            const tradeType = isBuyDNR ? 'BUY_DNR' : 'BUY_USDCK';
-            const amountIn = isBuyDNR 
-                ? randomizer.getRandomAmount(strategy.minUsdckTrade, strategy.maxUsdckTrade)
-                : randomizer.getRandomAmount(strategy.minDnrTrade, strategy.maxDnrTrade);
+            // 3. Determine Trade (Bullish Bias Implementation)
+            const isBuyUSDCK = randomizer.getWeightedChance(80); // 80% chance of price-increase action
+            const tradeType = isBuyUSDCK ? 'BUY_USDCK' : 'BUY_DNR';
+            const amountIn = isBuyUSDCK 
+                ? randomizer.getRandomAmount(strategy.minDnrTrade, strategy.maxDnrTrade)
+                : randomizer.getRandomAmount(strategy.minUsdckTrade, strategy.maxUsdckTrade);
 
-            const tokenInSymbol = isBuyDNR ? 'USDC.k' : 'DNR';
-            const tokenOutSymbol = isBuyDNR ? 'DNR' : 'USDC.k';
+            const tokenInSymbol = isBuyUSDCK ? 'DNR' : 'USDC.k';
+            const tokenOutSymbol = isBuyUSDCK ? 'USDC.k' : 'DNR';
 
             logger.info(`ℹ️  Preparing Trade #${tradeCount + 1}: ${tradeType} | Wallet: ${walletManager.maskAddress(wallet.address)}`);
             
@@ -92,7 +92,7 @@ async function runBot() {
                 successCount++;
                 errorStreak = 0;
                 
-                if (isBuyDNR) {
+                if (!isBuyUSDCK) {
                     totalUsdckVolume += amountIn;
                     totalDnrVolume += parseFloat(result.amountOut);
                 } else {

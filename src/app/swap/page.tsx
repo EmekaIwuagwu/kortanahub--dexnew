@@ -303,14 +303,22 @@ export default function SwapPage() {
 
         {/* Footer Metrics */}
         <div className="mt-6 flex justify-between px-4">
-           <div className="flex flex-col">
-              <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Omega Liquidity</span>
-              <span className="text-sm font-bold text-white">$2,591,018,193</span>
-           </div>
-           <div className="flex flex-col items-end">
-              <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">DNR Valuation</span>
-              <span className="text-sm font-bold text-primary font-mono">$215.92</span>
-           </div>
+           {reserves && (
+             <>
+               <div className="flex flex-col">
+                  <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Omega Liquidity</span>
+                  <span className="text-sm font-bold text-white">
+                    ${(Number((reserves as any)[0]) / 1e18 * 2).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                  </span>
+               </div>
+               <div className="flex flex-col items-end">
+                  <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">DNR Valuation</span>
+                  <span className="text-sm font-bold text-primary font-mono">
+                    ${(Number((reserves as any)[0]) / Number((reserves as any)[1])).toFixed(2)}
+                  </span>
+               </div>
+             </>
+           )}
         </div>
 
         <TxStatusModal 

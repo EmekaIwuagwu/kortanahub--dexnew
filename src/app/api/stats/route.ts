@@ -57,14 +57,14 @@ export async function GET() {
       success: true,
       network: "Kortana Zeus Mainnet",
       data: {
-        price_dnr_usd: 215.92,
-        live_pool_price: "215.90",
-        total_liquidity_usd: "2591018193.00", 
+        price_dnr_usd: livePrice.toFixed(2),
+        live_pool_price: livePrice.toFixed(4),
+        total_liquidity_usd: (Number(rUSDC) * 2).toFixed(2), 
         volume_24h: finalVolume.toFixed(2),
-        market_cap_fdv: "43184000000.00", 
+        market_cap_fdv: (livePrice * 200000000).toFixed(2), // 200M Max Supply assumption
         tokens: [
-          { symbol: "DNR", reserve: "12000000.00" }, 
-          { symbol: "USDC.k", reserve: "2591018193.00" }
+          { symbol: "DNR", reserve: ethers.formatUnits(rDNR, 18) }, 
+          { symbol: "USDC.k", reserve: ethers.formatUnits(rUSDC, 18) }
         ]
       }
     });
