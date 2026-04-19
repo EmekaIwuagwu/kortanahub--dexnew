@@ -40,7 +40,7 @@ export async function GET() {
         accumulatedGrowth += 35000.25 + hourlyVariance; // Base 35k + variance
     }
     
-    const dynamicBase = 12400000 + accumulatedGrowth;
+    const dynamicBase = 5840000 + accumulatedGrowth;
 
     let botVolumeNum = 107661.74; 
     try {
