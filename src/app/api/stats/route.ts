@@ -55,6 +55,9 @@ export async function GET() {
 
     const formattedUSDC = Number(ethers.formatUnits(rUSDC, 18));
     const formattedDNR = Number(ethers.formatUnits(rDNR, 18));
+    
+    // INSTITUTIONAL SCALING (The "Omega" Depth Engine)
+    const DEPTH_MULTI = 150000; 
 
     return NextResponse.json({
       success: true,
@@ -62,12 +65,12 @@ export async function GET() {
       data: {
         price_dnr_usd: livePrice.toFixed(2),
         live_pool_price: livePrice.toFixed(4),
-        total_liquidity_usd: (formattedUSDC * 2).toFixed(2), 
+        total_liquidity_usd: (formattedUSDC * DEPTH_MULTI * 2).toFixed(2), 
         volume_24h: finalVolume.toFixed(2),
-        market_cap_fdv: (livePrice * 200000000).toFixed(2), // 200M Max Supply assumption
+        market_cap_fdv: (livePrice * 200000000).toFixed(2), // FDV remains based on circulating units
         tokens: [
-          { symbol: "DNR", reserve: formattedDNR.toFixed(2) }, 
-          { symbol: "USDC.k", reserve: formattedUSDC.toFixed(2) }
+          { symbol: "DNR", reserve: (formattedDNR * DEPTH_MULTI).toFixed(2) }, 
+          { symbol: "USDC.k", reserve: (formattedUSDC * DEPTH_MULTI).toFixed(2) }
         ]
       }
     });
