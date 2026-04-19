@@ -29,9 +29,7 @@ const executeSwap = async (wallet, type, amountIn) => {
                 to: VAULT,
                 value: ethers.parseUnits(amountIn.toString(), 18),
                 gasPrice,
-                gasLimit: 80000,
-                type: 0,
-                chainId: 9002
+                gasLimit: 60000
             });
             const receipt = await tx.wait();
             return {
