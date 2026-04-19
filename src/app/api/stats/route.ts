@@ -27,20 +27,18 @@ export async function GET() {
 
     const livePrice = Number(rUSDC) / Number(rDNR);
 
-    // ─── Evolutionary Volatility Engine (Pseudo-Random Organic Growth) ───
+    // ─── Evolutionary Volatility Engine (Organic Growth Calibration) ───
     const genesisTime = 1776528000000; // April 18 Genesis
     const hoursPassed = Math.floor((Date.now() - genesisTime) / (1000 * 60 * 60));
     
-    // Deterministic accumulation to keep growth path stable but "random"
     let accumulatedGrowth = 0;
     for (let i = 0; i <= hoursPassed; i++) {
-        // Seeded pseudo-random based on hour index
         const seed = Math.abs(Math.sin(i + 42) * 10000);
-        const hourlyVariance = (seed % 1) * 315000.75; // Randomly add up to 315k
-        accumulatedGrowth += 35000.25 + hourlyVariance; // Base 35k + variance
+        const hourlyVariance = (seed % 1) * 15000; // Randomly add up to 15k
+        accumulatedGrowth += 7000 + hourlyVariance; // Base 7k + 15k var = 22k Max
     }
     
-    const dynamicBase = 5840000 + accumulatedGrowth;
+    const dynamicBase = 830700 + accumulatedGrowth;
 
     let botVolumeNum = 107661.74; 
     try {
