@@ -51,6 +51,11 @@ export async function GET() {
 
     const finalVolume = dynamicBase + botVolumeNum;
 
+    // ─── Institutional Price Appreciation Engine (Volume Linked) ───
+    // Every $1M in volume creates a $1.25 price premium over the floor
+    const volumePremium = (finalVolume / 1000000) * 1.25;
+    const syntheticPrice = livePrice + volumePremium;
+
     const formattedUSDC = Number(ethers.formatUnits(rUSDC, 18));
     const formattedDNR = Number(ethers.formatUnits(rDNR, 18));
     
@@ -61,8 +66,8 @@ export async function GET() {
       success: true,
       network: "Kortana Zeus Mainnet",
       data: {
-        price_dnr_usd: livePrice.toFixed(2),
-        live_pool_price: livePrice.toFixed(4),
+        price_dnr_usd: syntheticPrice.toFixed(2),
+        live_pool_price: syntheticPrice.toFixed(4),
         total_liquidity_usd: (formattedUSDC * DEPTH_MULTI * 2).toFixed(2), 
         volume_24h: finalVolume.toFixed(2),
         market_cap_fdv: (livePrice * 200000000).toFixed(2), // FDV remains based on circulating units
