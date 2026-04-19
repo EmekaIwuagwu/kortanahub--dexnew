@@ -18,6 +18,7 @@ import { parseUnits, formatUnits } from "viem";
 import { TokenSelectorModal } from "@/components/TokenSelectorModal";
 import { useTokenBalance } from "@/hooks/useTokenBalance";
 import { TxStatusModal } from "@/components/TxStatusModal";
+import { STATS_CONFIG, calculateSyntheticMetrics } from "@/lib/stats-engine";
 
 type Token = {
   symbol: string;
@@ -232,8 +233,10 @@ export default function SwapPage() {
                     const [r0, r1] = reserves as [bigint, bigint, number];
                     const rUSDC = isT0USDC ? r0 : r1;
                     const rDNR = isT0USDC ? r1 : r0;
-                    const price = (Number(rUSDC) / Number(rDNR)) + 5.25; // Matching Premium
-                    return (Number(amountIn || 0) * price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+                    const price = Number(rUSDC) / Number(rDNR);
+                    const { syntheticPrice } = calculateSyntheticMetrics(price);
+                    return (Number(amountIn || 0) * syntheticPrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                   })()}
                 </div>
                 <button onClick={() => setAmountIn(balanceInFormatted)} className="hover:text-primary transition-all flex items-center gap-2 bg-white/5 px-2 py-1 rounded-lg">Balance: {Number(balanceInFormatted).toFixed(4)} <span className="text-primary font-black">MAX</span></button>
@@ -321,21 +324,14 @@ export default function SwapPage() {
                 const rUSDC = isT0USDC ? r0 : r1;
                 const rDNR = isT0USDC ? r1 : r0;
                 
-                // INSTITUTIONAL DEPTH & GROWTH ENGINE
-                const DEPTH_MULTI = 150000;
                 const basePrice = Number(rUSDC) / Number(rDNR);
-                
-                // Volume-Linked Price Appreciation (Synced with API)
-                // Assuming ~4M base volume + current activity
-                const volPremium = 5.25; 
-                const livePriceVal = basePrice + volPremium;
-                
-                const totalLiq = (Number(rUSDC) / 1e18) * 2 * DEPTH_MULTI;
+                const { syntheticPrice, finalVolume } = calculateSyntheticMetrics(basePrice);
+                const totalLiq = (Number(rUSDC) / 1e18) * 2 * STATS_CONFIG.DEPTH_MULTI;
 
                 return (
                   <>
                     <div className="flex flex-col">
-                        <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Omega Liquidity</span>
+                        <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Institutional Depth</span>
                         <span className="text-sm font-bold text-white">
                           ${totalLiq.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                         </span>
@@ -343,7 +339,7 @@ export default function SwapPage() {
                     <div className="flex flex-col items-end">
                         <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">DNR Valuation</span>
                         <span className="text-sm font-bold text-primary font-mono">
-                          ${livePriceVal.toFixed(2)}
+                          ${syntheticPrice.toFixed(2)}
                         </span>
                     </div>
                   </>
