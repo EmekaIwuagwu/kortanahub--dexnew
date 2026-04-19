@@ -224,7 +224,10 @@ export default function SwapPage() {
                 </button>
               </div>
               <div className="flex justify-between items-center text-[11px] font-black uppercase tracking-widest text-text-muted/60">
-                <div className="flex items-center gap-1"><TrendingUp className="w-3 h-3 text-secondary" /> ~$0.00</div>
+                <div className="flex items-center gap-1">
+                  <TrendingUp className="w-3 h-3 text-secondary" /> 
+                  ~${reserves ? (Number(amountIn || 0) * (Number((reserves as any)[0]) / Number((reserves as any)[1]))).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"}
+                </div>
                 <button onClick={() => setAmountIn(balanceInFormatted)} className="hover:text-primary transition-all flex items-center gap-2 bg-white/5 px-2 py-1 rounded-lg">Balance: {Number(balanceInFormatted).toFixed(4)} <span className="text-primary font-black">MAX</span></button>
               </div>
             </div>
