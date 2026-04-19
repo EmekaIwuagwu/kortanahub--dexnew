@@ -72,8 +72,8 @@ async function runBot() {
 
             const { wallet } = walletData;
 
-            // 3. Determine Trade (Bullish Bias Implementation)
-            const isBuyUSDCK = randomizer.getWeightedChance(80); // 80% chance of price-increase action
+            // 3. Determine Trade (Balanced 60/40 Split Implementation)
+            const isBuyUSDCK = randomizer.getWeightedChance(60); // 60/40 Distribution
             const tradeType = isBuyUSDCK ? 'BUY_USDCK' : 'BUY_DNR';
             const amountIn = isBuyUSDCK 
                 ? randomizer.getRandomAmount(strategy.minDnrTrade, strategy.maxDnrTrade)
