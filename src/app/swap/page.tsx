@@ -41,6 +41,20 @@ export default function SwapPage() {
 
   const [activeStep, setActiveStep] = useState<"idle" | "approving" | "swapping" | "success">("idle");
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+  const [apiStats, setApiStats] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await fetch('/api/stats');
+        const data = await res.json();
+        if (data.success) setApiStats(data.data);
+      } catch (e) { console.error("Failed to fetch sync stats", e); }
+    };
+    fetchStats();
+    const interval = setInterval(fetchStats, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const { formatted: balanceInFormatted } = useTokenBalance(tokenIn);
   const { formatted: balanceOutFormatted } = useTokenBalance(tokenOut);
@@ -235,7 +249,8 @@ export default function SwapPage() {
                     const rDNR = isT0USDC ? r1 : r0;
 
                     const price = Number(rUSDC) / Number(rDNR);
-                    const { syntheticPrice } = calculateSyntheticMetrics(price);
+                    const botVol = apiStats ? parseFloat(apiStats.volume_24h) : undefined;
+                    const { syntheticPrice } = calculateSyntheticMetrics(price, botVol);
                     return (Number(amountIn || 0) * syntheticPrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                   })()}
                 </div>
@@ -323,9 +338,10 @@ export default function SwapPage() {
                 const [r0, r1] = reserves as [bigint, bigint, number];
                 const rUSDC = isT0USDC ? r0 : r1;
                 const rDNR = isT0USDC ? r1 : r0;
-                
+
                 const basePrice = Number(rUSDC) / Number(rDNR);
-                const { syntheticPrice, finalVolume } = calculateSyntheticMetrics(basePrice);
+                const botVol = apiStats ? parseFloat(apiStats.volume_24h) : undefined;
+                const { syntheticPrice } = calculateSyntheticMetrics(basePrice, botVol);
                 const totalLiq = (Number(rUSDC) / 1e18) * 2 * STATS_CONFIG.DEPTH_MULTI;
 
                 return (
