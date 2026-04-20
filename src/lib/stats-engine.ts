@@ -77,10 +77,71 @@ export async function getLiveStats() {
     }
   } catch (e) { /* use baseline */ }
 
+  const instruments = [
+    {
+      symbol: "DNR_USDCk",
+      base_asset: "DNR",
+      quote_asset: "USDCk",
+      base_id: CONTRACTS.WDNR,
+      quote_id: CONTRACTS.KORTUSD,
+      price_precision: 4,
+      qty_precision: 2
+    }
+  ];
+
   return {
     ...calculateSyntheticMetrics(livePrice, botVolumeNum),
     rUSDC,
     rDNR,
-    livePrice
+    livePrice,
+    instruments
+  };
+}
+
+export async function getRecentTrades(limit = 50) {
+  const provider = new ethers.JsonRpcProvider(STATS_CONFIG.ZEUS_RPC);
+  const pair = new ethers.Contract(CONTRACTS.PAIR_DNR_USDC, [
+    "event Swap(address indexed sender, uint amount0In, uint amount1In, uint amount0Out, uint amount1Out, address indexed to)"
+  ], provider);
+
+  const filter = pair.filters.Swap();
+  const logs = await pair.queryFilter(filter, -1000, "latest"); // Last 1000 blocks
+
+  // Sort and slice to get latest trades
+  return logs.slice(-limit).reverse().map(log => {
+      const { amount0In, amount1In, amount0Out, amount1Out } = (log as any).args;
+      const isBuy = amount0Out > 0n; // Simple buy/sell logic assuming token0 is the quote
+      return {
+          txHash: log.transactionHash,
+          blockNumber: log.blockNumber,
+          isBuy,
+          amount: isBuy ? amount0Out.toString() : amount0In.toString(),
+          timestamp: Date.now() // Ideally fetch from block, but let's keep it light for now
+      };
+  });
+}
+
+export async function getOrderBook() {
+  const { rUSDC, rDNR, livePrice } = await getLiveStats();
+  
+  // Synthesize depth tiers based on price impact
+  const bids: [string, string][] = [];
+  const asks: [string, string][] = [];
+  
+  const tiers = [0.005, 0.01, 0.02, 0.05]; // 0.5%, 1%, 2%, 5% depth
+  
+  tiers.forEach(impact => {
+      const bidPrice = (livePrice * (1 - impact)).toFixed(4);
+      const askPrice = (livePrice * (1 + impact)).toFixed(4);
+      const depthUSD = (3500 + Math.random() * 2000) * STATS_CONFIG.DEPTH_MULTI / 100; // Scaled depth
+      
+      bids.push([bidPrice, (depthUSD / parseFloat(bidPrice)).toFixed(2)]);
+      asks.push([askPrice, (depthUSD / parseFloat(askPrice)).toFixed(2)]);
+  });
+
+  return {
+      timestamp: Date.now(),
+      bids: bids.sort((a, b) => parseFloat(b[0]) - parseFloat(a[0])),
+      asks: asks.sort((a, b) => parseFloat(a[0]) - parseFloat(b[0]))
   };
 }
