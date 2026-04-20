@@ -9,7 +9,7 @@ export const STATS_CONFIG = {
   MAX_HOURLY_VARIANCE: 15000,
   INITIAL_DYNAMIC_BASE: 830700,
   BOT_VOLUME_BASELINE: 107661.74,
-  TOTAL_SUPPLY: 200000000,
+  TOTAL_SUPPLY: 10000000000,
   ZEUS_RPC: "https://zeus-rpc.mainnet.kortana.xyz"
 };
 
@@ -38,6 +38,17 @@ export function calculateSyntheticMetrics(livePrice: number, botVolume: number =
     volumePremium,
     syntheticPrice,
     fdv: syntheticPrice * STATS_CONFIG.TOTAL_SUPPLY
+  };
+}
+
+export function getSupplyMetrics() {
+  // We can refine this logic to subtract locked wallet balances later
+  const total = STATS_CONFIG.TOTAL_SUPPLY;
+  const circulating = total; // Default to full circulation for now unless you have locked addresses
+  
+  return {
+    total,
+    circulating
   };
 }
 
