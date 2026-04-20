@@ -19,6 +19,7 @@ import { TokenSelectorModal } from "@/components/TokenSelectorModal";
 import { useTokenBalance } from "@/hooks/useTokenBalance";
 import { TxStatusModal } from "@/components/TxStatusModal";
 import { STATS_CONFIG, calculateSyntheticMetrics } from "@/lib/stats-engine";
+import { SettingsModal } from "@/components/SettingsModal";
 
 type Token = {
   symbol: string;
@@ -38,10 +39,12 @@ export default function SwapPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectingFor, setSelectingFor] = useState<"in" | "out">("in");
   const [slippage, setSlippage] = useState(0.5);
-
   const [activeStep, setActiveStep] = useState<"idle" | "approving" | "swapping" | "success">("idle");
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [deadlineMinutes, setDeadlineMinutes] = useState(20);
   const [apiStats, setApiStats] = useState<any>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -103,6 +106,16 @@ export default function SwapPage() {
     query: { enabled: !!pairAddress }
   });
 
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await Promise.all([
+      refetchReserves(),
+      refetchAllowance()
+    ]);
+    // Small delay to ensure the animation is visible and feels "real"
+    setTimeout(() => setIsRefreshing(false), 500);
+  };
+
   const isQuoting = isReservesLoading;
 
   useEffect(() => {
@@ -139,7 +152,7 @@ export default function SwapPage() {
 
   const handleSwap = async () => {
     if (!parsedAmountIn || !address || !pairAddress) return;
-    const deadline = BigInt(Math.floor(Date.now() / 1000) + 60 * 20);
+    const deadline = BigInt(Math.floor(Date.now() / 1000) + 60 * deadlineMinutes);
     const quoteAmt = amountOut ? parseUnits(amountOut, tokenOut.decimals) : 0n;
     const minOut = (quoteAmt * BigInt(Math.floor((100 - slippage) * 100))) / 10000n;
 
@@ -213,8 +226,18 @@ export default function SwapPage() {
               <span className="text-[10px] text-text-muted/70 font-bold uppercase tracking-[0.2em]">Institutional Engine</span>
             </div>
             <div className="flex gap-2">
-              <button className="p-2.5 text-text-muted hover:text-white transition-all bg-white/[0.05] rounded-2xl border border-white/[0.05]"><RefreshCw className="w-4 h-4" /></button>
-              <button className="p-2.5 text-text-muted hover:text-white transition-all bg-white/[0.05] rounded-2xl border border-white/[0.05]"><Settings2 className="w-4 h-4" /></button>
+              <button 
+                onClick={handleRefresh}
+                className="p-2.5 text-text-muted hover:text-white transition-all bg-white/[0.05] rounded-2xl border border-white/[0.05] active:scale-95"
+              >
+                <RefreshCw className={`w-4 h-4 ${isRefreshing || isReservesLoading ? 'animate-spin text-primary' : ''}`} />
+              </button>
+              <button 
+                onClick={() => setIsSettingsOpen(true)}
+                className="p-2.5 text-text-muted hover:text-white transition-all bg-white/[0.05] rounded-2xl border border-white/[0.05] active:scale-95"
+              >
+                <Settings2 className="w-4 h-4" />
+              </button>
             </div>
           </div>
 
@@ -382,6 +405,15 @@ export default function SwapPage() {
           else { if (t.address === tokenIn.address) setTokenIn(tokenOut); setTokenOut(t); }
           setIsModalOpen(false);
         }} />
+
+        <SettingsModal 
+          isOpen={isSettingsOpen} 
+          onClose={() => setIsSettingsOpen(false)} 
+          slippage={slippage}
+          setSlippage={setSlippage}
+          deadline={deadlineMinutes}
+          setDeadline={setDeadlineMinutes}
+        />
       </div>
 
       <style jsx>{`
