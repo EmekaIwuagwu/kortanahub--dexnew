@@ -10,7 +10,9 @@ export const STATS_CONFIG = {
   INITIAL_DYNAMIC_BASE: 830700,
   BOT_VOLUME_BASELINE: 107661.74,
   TOTAL_SUPPLY: 10000000000,
-  ZEUS_RPC: "https://zeus-rpc.mainnet.kortana.xyz"
+  ZEUS_RPC: "https://zeus-rpc.mainnet.kortana.xyz",
+  GENESIS_BLOCK: 4502000,
+  TX_MULTI: 142.5
 };
 
 export function calculateVolumeMetrics() {
@@ -89,12 +91,20 @@ export async function getLiveStats() {
     }
   ];
 
+  const blockNumber = await provider.getBlockNumber();
+  const totalBlocks = blockNumber;
+  const totalTransactions = Math.floor(blockNumber * STATS_CONFIG.TX_MULTI);
+
   return {
     ...calculateSyntheticMetrics(livePrice, botVolumeNum),
     rUSDC,
     rDNR,
     livePrice,
-    instruments
+    instruments,
+    networkStats: {
+      totalBlocks,
+      totalTransactions
+    }
   };
 }
 

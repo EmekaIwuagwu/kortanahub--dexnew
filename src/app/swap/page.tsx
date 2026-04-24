@@ -365,14 +365,13 @@ export default function SwapPage() {
                 const basePrice = Number(rUSDC) / Number(rDNR);
                 const botVol = apiStats ? parseFloat(apiStats.volume_24h) : undefined;
                 const { syntheticPrice } = calculateSyntheticMetrics(basePrice, botVol);
-                const totalLiq = (Number(rUSDC) / 1e18) * 2 * STATS_CONFIG.DEPTH_MULTI;
 
                 return (
                   <>
                     <div className="flex flex-col">
-                        <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Institutional Depth</span>
+                        <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Transactions Processed</span>
                         <span className="text-sm font-bold text-white">
-                          ${totalLiq.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                          {(apiStats?.total_transactions || 0).toLocaleString()}
                         </span>
                     </div>
                     <div className="flex flex-col items-end">

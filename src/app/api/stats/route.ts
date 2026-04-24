@@ -10,7 +10,8 @@ export async function GET() {
       fdv, 
       rUSDC, 
       rDNR, 
-      livePrice 
+      livePrice,
+      networkStats
     } = await getLiveStats();
 
     const formattedUSDC = Number(ethers.formatUnits(rUSDC, 18));
@@ -25,6 +26,8 @@ export async function GET() {
         total_liquidity_usd: (formattedUSDC * STATS_CONFIG.DEPTH_MULTI * 2).toFixed(2), 
         volume_24h: finalVolume.toFixed(2),
         market_cap_fdv: fdv.toFixed(2),
+        total_transactions: (networkStats as any)?.totalTransactions || 0,
+        total_blocks: (networkStats as any)?.totalBlocks || 0,
         tokens: [
           { symbol: "DNR", reserve: (formattedDNR * STATS_CONFIG.DEPTH_MULTI).toFixed(2) }, 
           { symbol: "USDC.k", reserve: (formattedUSDC * STATS_CONFIG.DEPTH_MULTI).toFixed(2) }
